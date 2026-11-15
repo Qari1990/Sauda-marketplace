@@ -1,6 +1,6 @@
 import type {
   Conversation, Deal, Listing, ListingFilters, Message, NewListing, Offer,
-  PhoneReveal, PriceInsight, Profile, PublicOffer, Review, Category,
+  FeedItem, PhoneReveal, PriceInsight, Profile, PublicOffer, Review, Category,
 } from '../types';
 
 export interface Session {
@@ -38,6 +38,9 @@ export interface Backend {
   recordView(id: string): Promise<void>;
   priceInsight(category: Category, title: string, excludeId?: string): Promise<PriceInsight | null>;
   reportListing(id: string, reason: string): Promise<void>;
+
+  /** latest offers across the marketplace, for the live ticker */
+  liveFeed(limit?: number): Promise<FeedItem[]>;
 
   // saved
   listSaved(): Promise<Listing[]>;

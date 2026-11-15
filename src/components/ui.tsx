@@ -6,7 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { font, useTheme } from '@/theme';
+import { display, font, useTheme } from '@/theme';
 import { timeLeft } from '@/lib/format';
 
 export type IconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -14,16 +14,16 @@ export const Icon = Ionicons;
 
 type TxtVariant = 'display' | 'h1' | 'h2' | 'h3' | 'body' | 'bodyStrong' | 'small' | 'smallStrong' | 'tiny' | 'price';
 const variants: Record<TxtVariant, TextStyle> = {
-  display: { fontFamily: font.heavy, fontSize: 30, letterSpacing: -0.8, lineHeight: 36 },
-  h1: { fontFamily: font.heavy, fontSize: 24, letterSpacing: -0.6, lineHeight: 30 },
-  h2: { fontFamily: font.bold, fontSize: 19, letterSpacing: -0.3, lineHeight: 25 },
+  display: { fontFamily: display.heavy, fontSize: 34, letterSpacing: -1.2, lineHeight: 36 },
+  h1: { fontFamily: display.heavy, fontSize: 26, letterSpacing: -0.8, lineHeight: 30 },
+  h2: { fontFamily: display.bold, fontSize: 20, letterSpacing: -0.4, lineHeight: 25 },
   h3: { fontFamily: font.bold, fontSize: 16, lineHeight: 22 },
   body: { fontFamily: font.regular, fontSize: 15, lineHeight: 22 },
   bodyStrong: { fontFamily: font.semibold, fontSize: 15, lineHeight: 22 },
   small: { fontFamily: font.medium, fontSize: 13, lineHeight: 18 },
   smallStrong: { fontFamily: font.bold, fontSize: 13, lineHeight: 18 },
   tiny: { fontFamily: font.semibold, fontSize: 11, lineHeight: 14 },
-  price: { fontFamily: font.heavy, fontSize: 18, letterSpacing: -0.3 },
+  price: { fontFamily: display.heavy, fontSize: 20, letterSpacing: -0.5 },
 };
 
 export function Txt({ v = 'body', color, muted, style, ...rest }: React.ComponentProps<typeof Text> & { v?: TxtVariant; color?: string; muted?: boolean }) {
@@ -55,7 +55,7 @@ export function Button({
       disabled={disabled || loading}
       style={({ pressed }) => [
         {
-          height: h, borderRadius: size === 'sm' ? 11 : 14, paddingHorizontal: size === 'sm' ? 12 : 18,
+          height: h, borderRadius: h / 2, paddingHorizontal: size === 'sm' ? 12 : 18,
           backgroundColor: p.bg, borderWidth: p.border ? 1.5 : 0, borderColor: p.border,
           flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
           opacity: disabled ? 0.45 : pressed ? 0.85 : 1, transform: [{ scale: pressed ? 0.98 : 1 }],
@@ -73,7 +73,7 @@ export function Button({
 export function Card({ children, style, onPress, pad = 16 }: { children: React.ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; pad?: number }) {
   const { c, dark } = useTheme();
   const base: ViewStyle = {
-    backgroundColor: c.card, borderRadius: 20, borderWidth: 1, borderColor: c.line, padding: pad,
+    backgroundColor: c.card, borderRadius: 24, borderWidth: 0, padding: pad,
     ...(dark ? {} : shadow),
   };
   if (onPress) {
@@ -95,7 +95,7 @@ export function Input({ label, hint, error, left, style, ...rest }: TextInputPro
       {label ? <Txt v="smallStrong">{label}</Txt> : null}
       <View style={{
         flexDirection: 'row', alignItems: rest.multiline ? 'flex-start' : 'center', gap: 8,
-        backgroundColor: c.input, borderRadius: 14, paddingHorizontal: 14,
+        backgroundColor: c.input, borderRadius: 18, paddingHorizontal: 16,
         borderWidth: 1.5, borderColor: error ? c.danger : focus ? c.brand : 'transparent',
       }}>
         {left}
@@ -128,10 +128,10 @@ export function Chip({ label, on, onPress, icon }: { label: string; on?: boolean
   );
 }
 
-export function Pill({ label, tone = 'brand', icon, style }: { label: string; tone?: 'brand' | 'accent' | 'danger' | 'ok' | 'info' | 'muted'; icon?: IconName; style?: StyleProp<ViewStyle> }) {
-  const { c, dark } = useTheme();
+export function Pill({ label, tone = 'brand', icon, style }: { label: string; tone?: 'brand' | 'accent' | 'danger' | 'ok' | 'info' | 'muted' | 'hot'; icon?: IconName; style?: StyleProp<ViewStyle> }) {
+  const { c } = useTheme();
   const map = {
-    brand: [c.brandSoft, c.brand], accent: [c.accentSoft, dark ? c.accent : '#8A5A00'], danger: [c.dangerSoft, c.danger],
+    brand: [c.brandSoft, c.brand], accent: [c.accent, c.accentInk], danger: [c.dangerSoft, c.danger], hot: [c.hotSoft, c.hot],
     ok: [c.okSoft, c.ok], info: [c.infoSoft, c.info], muted: [c.input, c.muted],
   } as const;
   const [bg, fg] = (map as any)[tone] as [string, string];
@@ -160,7 +160,7 @@ export function Stars({ value, size = 14, onChange }: { value: number; size?: nu
     <View style={{ flexDirection: 'row', gap: onChange ? 8 : 2 }}>
       {[1, 2, 3, 4, 5].map(n => (
         <Pressable key={n} disabled={!onChange} onPress={() => onChange?.(n)} hitSlop={6}>
-          <Icon name={value >= n ? 'star' : value >= n - 0.5 ? 'star-half' : 'star-outline'} size={size} color="#FFB020" />
+          <Icon name={value >= n ? 'star' : value >= n - 0.5 ? 'star-half' : 'star-outline'} size={size} color="#F5B92E" />
         </Pressable>
       ))}
     </View>
@@ -193,7 +193,7 @@ export function Screen({
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: c.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       {header}
       {scroll ? (
-        <ScrollView contentContainerStyle={{ paddingBottom: 40 }} keyboardShouldPersistTaps="handled" refreshControl={refreshControl}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 130 }} keyboardShouldPersistTaps="handled" refreshControl={refreshControl}>
           {inner}
         </ScrollView>
       ) : <View style={{ flex: 1 }}>{inner}</View>}
@@ -208,15 +208,15 @@ export function TopBar({ title, right, back = true, transparent }: { title?: str
   return (
     <View style={{
       paddingTop: insets.top + 6, paddingBottom: 10, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 8,
-      backgroundColor: transparent ? 'transparent' : c.bg, borderBottomWidth: transparent ? 0 : StyleSheet.hairlineWidth, borderBottomColor: c.line,
+      backgroundColor: transparent ? 'transparent' : c.bg, borderBottomWidth: 0,
     }}>
       {back ? (
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={10}
-          style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: c.card, borderWidth: 1, borderColor: c.line, alignItems: 'center', justifyContent: 'center' }}>
+          style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: c.card, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="chevron-back" size={22} color={c.ink} />
         </Pressable>
       ) : null}
-      <Txt v="h2" style={{ flex: 1 }} numberOfLines={1}>{title}</Txt>
+      <Txt v="h1" style={{ flex: 1 }} numberOfLines={1}>{title}</Txt>
       {right}
     </View>
   );
@@ -225,7 +225,7 @@ export function TopBar({ title, right, back = true, transparent }: { title?: str
 export function IconBtn({ name, onPress, color, badge }: { name: IconName; onPress?: () => void; color?: string; badge?: number }) {
   const { c } = useTheme();
   return (
-    <Pressable onPress={onPress} hitSlop={8} style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: c.card, borderWidth: 1, borderColor: c.line, alignItems: 'center', justifyContent: 'center' }}>
+    <Pressable onPress={onPress} hitSlop={8} style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: c.card, alignItems: 'center', justifyContent: 'center' }}>
       <Icon name={name} size={20} color={color ?? c.ink} />
       {badge ? (
         <View style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, borderRadius: 9, backgroundColor: c.danger, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 }}>

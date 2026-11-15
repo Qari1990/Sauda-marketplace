@@ -3,9 +3,13 @@
 Sauda is a buy-and-sell marketplace for Pakistan where **every offer is public and time-limited**, and
 **phone numbers are shared only after buyer and seller both agree**.
 
-| Home | Ad + offer board | Make offer | Deal (number revealed) |
+| Home | Closing soon / almost a deal | Ad + deal meter | Deal (number revealed) |
 |---|---|---|---|
-| ![](docs/screenshots/01-home.png) | ![](docs/screenshots/03-listing.png) | ![](docs/screenshots/06-offer-sheet.png) | ![](docs/screenshots/09-deal-revealed.png) |
+| ![](docs/screenshots/01-home.png) | ![](docs/screenshots/02-spotlight.png) | ![](docs/screenshots/03-listing.png) | ![](docs/screenshots/09-deal-revealed.png) |
+
+**Design**: "live bazaar" look, not a classic classifieds grid. Violet + lime palette, Bricolage Grotesque headlines,
+a live ticker of offers, a deal meter on every card (how close the best offer is to the asking price),
+"Offers closing soon" and "Almost a deal" rails, and a floating dock instead of a tab bar.
 
 ## What's in this MVP
 
