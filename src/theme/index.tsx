@@ -3,18 +3,26 @@ import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const light = {
-  bg: '#F5F4EF', card: '#FFFFFF', ink: '#121620', muted: '#6B7280', line: '#E6E3DC', input: '#F0EEE8',
-  brand: '#0E7C66', brandDeep: '#0A5446', brandSoft: '#E3F2ED', accent: '#FFB020', accentInk: '#4A3000',
-  accentSoft: '#FFF3D6', danger: '#D9443B', dangerSoft: '#FCE8E6', ok: '#1F9D55', okSoft: '#E2F5EA',
-  info: '#2F6FED', infoSoft: '#E6EEFD', overlay: 'rgba(10,14,20,0.45)',
+  bg: '#F3F0EA', card: '#FFFFFF', ink: '#16131D', muted: '#6E6979', line: '#E6E1D8', input: '#EDE9E1',
+  brand: '#4F2FE0', brandDeep: '#2E1A99', brandSoft: '#ECE8FF', accent: '#D4F53C', accentInk: '#16131D',
+  accentSoft: '#F3FCD0', hot: '#FF5A36', hotSoft: '#FFE8E1', gold: '#E2A100',
+  danger: '#E5484D', dangerSoft: '#FDE8E8', ok: '#14A06A', okSoft: '#DDF6EA',
+  info: '#2F6FED', infoSoft: '#E6EEFD', overlay: 'rgba(14,10,24,0.5)', dock: '#16131D', dockInk: '#FFFFFF',
 };
 const dark: typeof light = {
-  bg: '#0E1115', card: '#171B21', ink: '#EEF0F3', muted: '#9AA3AF', line: '#262C34', input: '#1E232B',
-  brand: '#2BB596', brandDeep: '#1E9A7E', brandSoft: '#13302A', accent: '#FFB020', accentInk: '#2B1C00',
-  accentSoft: '#3A2D10', danger: '#F06A60', dangerSoft: '#3A1A18', ok: '#3CC47A', okSoft: '#142E20',
-  info: '#6F9BFF', infoSoft: '#18233D', overlay: 'rgba(0,0,0,0.6)',
+  bg: '#0C0A11', card: '#16131E', ink: '#F2F0F7', muted: '#9A95A6', line: '#262230', input: '#1F1B29',
+  brand: '#8C74FF', brandDeep: '#6B52F0', brandSoft: '#221B3D', accent: '#D4F53C', accentInk: '#16131D',
+  accentSoft: '#2A3311', hot: '#FF7552', hotSoft: '#3A1B14', gold: '#F5B92E',
+  danger: '#F2686C', dangerSoft: '#3A1A1C', ok: '#3CCB8A', okSoft: '#13301F',
+  info: '#6F9BFF', infoSoft: '#18233D', overlay: 'rgba(0,0,0,0.65)', dock: '#F2F0F7', dockInk: '#16131D',
 };
 export type Colors = typeof light;
+
+export const display = {
+  bold: 'BricolageGrotesque_700Bold',
+  heavy: 'BricolageGrotesque_800ExtraBold',
+  semibold: 'BricolageGrotesque_600SemiBold',
+};
 
 export const font = {
   regular: 'PlusJakartaSans_400Regular',
@@ -32,9 +40,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const sys = useColorScheme();
   const [pref, setPrefState] = useState<Pref>('system');
   useEffect(() => {
-    AsyncStorage.getItem('sauda.theme').then(v => { if (v === 'light' || v === 'dark' || v === 'system') setPrefState(v); });
+    AsyncStorage.getItem('sauda.theme').then(v => { if (v === 'light' || v === 'dark' || v === 'system') setPrefState(v); }).catch(() => {});
   }, []);
-  const setPref = (p: Pref) => { setPrefState(p); AsyncStorage.setItem('sauda.theme', p); };
+  const setPref = (p: Pref) => { setPrefState(p); AsyncStorage.setItem('sauda.theme', p).catch(() => {}); };
   const isDark = pref === 'system' ? sys === 'dark' : pref === 'dark';
   const value = useMemo(() => ({ c: isDark ? dark : light, dark: isDark, pref, setPref }), [isDark, pref]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

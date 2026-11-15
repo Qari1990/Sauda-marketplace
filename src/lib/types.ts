@@ -42,6 +42,19 @@ export interface Listing {
   /** summary of the public offer board */
   offer_count?: number;
   top_offer?: number | null;
+  /** when the soonest live offer expires */
+  next_expiry?: string | null;
+}
+
+/** Public live feed of offers across the marketplace (no buyer identity). */
+export interface FeedItem {
+  id: string;
+  listing_id: string;
+  title: string;
+  category: Category;
+  amount: number;
+  asking: number;
+  created_at: string;
 }
 
 export type OfferStatus = 'pending' | 'countered' | 'accepted' | 'rejected' | 'withdrawn' | 'expired';

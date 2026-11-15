@@ -7,6 +7,7 @@ import {
   useFonts, PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
+import { BricolageGrotesque_600SemiBold, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from '@expo-google-fonts/bricolage-grotesque';
 import { ThemeProvider, useTheme } from '@/theme';
 import { AppStateProvider } from '@/lib/app-state';
 import { ToastHost } from '@/components/ui';
@@ -29,6 +30,7 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold,
+    BricolageGrotesque_600SemiBold, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold,
   });
   if (!loaded) return null;
   return (

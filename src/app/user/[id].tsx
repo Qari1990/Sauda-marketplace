@@ -33,7 +33,7 @@ export default function UserProfile() {
         <Row gap={10}>
           {[
             ['Completed deals', String(p.deals_completed), c.brand],
-            ['Rating', p.rating_avg ? `${p.rating_avg}★` : '-', c.accent],
+            ['Rating', p.rating_avg ? `${p.rating_avg}★` : '-', c.gold],
             ['Backed out', String(p.backouts), p.backouts ? c.danger : c.muted],
           ].map(([k, v, col]) => (
             <View key={k} style={{ flex: 1, backgroundColor: c.input, borderRadius: 14, padding: 10, alignItems: 'center' }}>

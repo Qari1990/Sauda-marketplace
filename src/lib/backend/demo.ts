@@ -64,7 +64,8 @@ async function load(): Promise<State> {
   return state;
 }
 async function save() {
-  if (state) await AsyncStorage.setItem(KEY, JSON.stringify(state));
+  // Storage can be unavailable (private mode, sandboxed frames): keep working in memory.
+  if (state) await AsyncStorage.setItem(KEY, JSON.stringify(state)).catch(() => {});
   changeListeners.forEach(cb => cb());
 }
 
@@ -93,6 +94,7 @@ function withSummary(s: State, l: Listing): Listing {
     seller: profile(s, l.seller_id),
     offer_count: open.length,
     top_offer: open.length ? Math.max(...open.map(o => o.amount)) : null,
+    next_expiry: open.length ? open.map(o => o.expires_at).sort()[0] : null,
   };
 }
 function expireOffers(s: State) {
@@ -275,6 +277,14 @@ export function createDemoBackend(): Backend {
       const s = await load();
       s.reports.push({ listing_id: lid, by: me(s), reason });
       await save();
+    },
+
+    async liveFeed(limit = 20) {
+      const s = await load();
+      return [...s.offers].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, limit).map(o => {
+        const l = s.listings.find(x => x.id === o.listing_id)!;
+        return { id: o.id, listing_id: l.id, title: l.title, category: l.category, amount: o.amount, asking: l.price, created_at: o.created_at };
+      });
     },
 
     async listSaved() {

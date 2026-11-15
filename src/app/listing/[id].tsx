@@ -53,17 +53,32 @@ export default function ListingScreen() {
   }
 
   const offerBox = (
-    <Card style={{ gap: 12 }}>
-      <Row style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <View style={{ flex: 1, gap: 2 }}>
-          <Txt v="tiny" muted>ASKING PRICE</Txt>
-          <Txt v="h1">{rs(l.price)}</Txt>
-        </View>
-        <View style={{ alignItems: 'flex-end', gap: 2 }}>
-          <Txt v="tiny" muted>HIGHEST LIVE OFFER</Txt>
-          <Txt v="h2" color={live.length ? c.ok : c.muted}>{live.length ? rsShort(Math.max(...live.map(o => o.amount))) : 'None yet'}</Txt>
-        </View>
-      </Row>
+    <Card style={{ gap: 14 }}>
+      {(() => {
+        const top = live.length ? Math.max(...live.map(o => o.amount)) : null;
+        const pct = top ? Math.round((top / l.price) * 100) : 0;
+        return (
+          <View style={{ backgroundColor: '#16131D', borderRadius: 20, padding: 16, gap: 12 }}>
+            <Row style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <View>
+                <Txt v="tiny" color="rgba(255,255,255,0.55)">ASKING</Txt>
+                <Txt v="h1" color="#fff">{rs(l.price)}</Txt>
+              </View>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Txt v="tiny" color="rgba(255,255,255,0.55)">BEST LIVE OFFER</Txt>
+                <Txt v="h2" color={top ? c.accent : 'rgba(255,255,255,0.5)'}>{top ? rsShort(top) : 'None yet'}</Txt>
+              </View>
+            </Row>
+            <View style={{ height: 12, borderRadius: 6, backgroundColor: 'rgba(255,255,255,0.12)', overflow: 'hidden' }}>
+              {top ? <View style={{ width: `${Math.min(100, pct)}%`, height: '100%', borderRadius: 6, backgroundColor: c.accent }} /> : null}
+            </View>
+            <Row style={{ justifyContent: 'space-between' }}>
+              <Txt v="tiny" color="rgba(255,255,255,0.7)">{top ? `Buyers are at ${pct}% of the asking price` : 'Your offer will be the first one'}</Txt>
+              <Txt v="tiny" color="rgba(255,255,255,0.7)">{live.length} live</Txt>
+            </Row>
+          </View>
+        );
+      })()}
       {l.status === 'reserved' ? (
         <Row gap={8} style={{ backgroundColor: c.infoSoft, padding: 12, borderRadius: 14 }}>
           <Icon name="hand-left" size={18} color={c.info} />
@@ -150,7 +165,7 @@ export default function ListingScreen() {
             </View>
             <View style={{ alignItems: 'flex-end' }}>
               <Txt v="h3" color={isOpen(o) ? c.ink : c.muted} style={!isOpen(o) ? { textDecorationLine: 'line-through' } : undefined}>{rsShort(o.amount)}</Txt>
-              {o.counter_amount ? <Txt v="tiny" color={c.accent}>counter {rsShort(o.counter_amount)}</Txt> : null}
+              {o.counter_amount ? <Txt v="tiny" color={c.hot}>counter {rsShort(o.counter_amount)}</Txt> : null}
             </View>
           </Row>
           {mine && isOpen(o) && l.status === 'active' ? (
@@ -206,7 +221,7 @@ export default function ListingScreen() {
         </Card>
       ) : null}
       <Card style={{ gap: 8, backgroundColor: c.accentSoft, borderColor: 'transparent' }}>
-        <Row gap={6}><Icon name="shield-half" size={17} color={dark ? c.accent : '#8A5A00'} /><Txt v="h3">Stay safe</Txt></Row>
+        <Row gap={6}><Icon name="shield-half" size={17} color={c.ink} /><Txt v="h3">Stay safe</Txt></Row>
         {['Meet in a public place and check the item before paying.', 'Never pay in advance or share OTP codes.', 'For phones, check PTA status and IMEI before buying.'].map(t => (
           <Row key={t} gap={8} style={{ alignItems: 'flex-start' }}><Txt v="small">•</Txt><Txt v="small" style={{ flex: 1 }}>{t}</Txt></Row>
         ))}

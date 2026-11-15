@@ -36,8 +36,8 @@ export function createSupabaseBackend(url: string, anonKey: string): Backend {
     if (!ls.length) return ls;
     const { data, error } = await sb.rpc('listing_offer_summary', { p_ids: ls.map(l => l.id) });
     fail(error);
-    const m = new Map<string, { offer_count: number; top_offer: number }>((data ?? []).map((r: any) => [r.listing_id, r]));
-    return ls.map(l => ({ ...l, offer_count: m.get(l.id)?.offer_count ?? 0, top_offer: m.get(l.id)?.top_offer ?? null }));
+    const m = new Map<string, { offer_count: number; top_offer: number; next_expiry: string }>((data ?? []).map((r: any) => [r.listing_id, r]));
+    return ls.map(l => ({ ...l, offer_count: m.get(l.id)?.offer_count ?? 0, top_offer: m.get(l.id)?.top_offer ?? null, next_expiry: m.get(l.id)?.next_expiry ?? null }));
   }
 
   async function uploadPhoto(uri: string, i: number): Promise<string> {
@@ -149,6 +149,12 @@ export function createSupabaseBackend(url: string, anonKey: string): Backend {
     async reportListing(id, reason) {
       const { error } = await sb.from('reports').insert({ listing_id: id, reason });
       fail(error);
+    },
+
+    async liveFeed(limit = 20) {
+      const { data, error } = await sb.rpc('live_offer_feed', { p_limit: limit });
+      fail(error);
+      return (data ?? []) as any;
     },
 
     async listSaved() {

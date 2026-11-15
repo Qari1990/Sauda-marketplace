@@ -76,7 +76,7 @@ function OfferList({ data, loading, role, onChange }: { data?: Offer[]; loading:
               </View>
               <View style={{ alignItems: 'flex-end' }}>
                 <Txt v="h3">{rsShort(o.amount)}</Txt>
-                {o.counter_amount ? <Txt v="tiny" color={c.accent}>counter {rsShort(o.counter_amount)}</Txt> : null}
+                {o.counter_amount ? <Txt v="tiny" color={c.hot}>counter {rsShort(o.counter_amount)}</Txt> : null}
               </View>
             </Row>
             {o.message ? <Txt v="small" muted style={{ fontStyle: 'italic' }}>"{o.message}"</Txt> : null}
@@ -138,7 +138,7 @@ function DealList({ data, loading }: { data?: Deal[]; loading: boolean }) {
                 </View>
               </Row>
               {d.status === 'completed' && !d.my_review_done ? (
-                <Row gap={6}><Icon name="star" size={14} color={c.accent} /><Txt v="small" color={c.brand}>Rate {other?.name || 'them'} to help others</Txt></Row>
+                <Row gap={6}><Icon name="star" size={14} color={c.gold} /><Txt v="small" color={c.brand}>Rate {other?.name || 'them'} to help others</Txt></Row>
               ) : null}
             </Card>
           </Pressable>
